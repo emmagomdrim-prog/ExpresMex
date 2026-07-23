@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rastreo de Paquetería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+min-height:100vh;color:#fff;display:flex;flex-direction:column}
+header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:28px;font-weight:700}
+main{flex:1;display:flex;justify-content:center;align-items:center;padding:30px}
+.hero{width:100%;max-width:700px;background:rgba(255,255,255,.08);
+backdrop-filter:blur(12px);padding:40px;border-radius:20px;text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.hero h1{font-size:40px;margin-bottom:10px}
+.hero p{opacity:.9;margin-bottom:30px}
+.busqueda{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.busqueda input{flex:1;min-width:220px;padding:16px;border:none;border-radius:10px;font-size:16px}
+.busqueda button{padding:16px 28px;border:none;border-radius:10px;background:#22c55e;color:#fff;font-weight:700;cursor:pointer}
+.busqueda button:hover{background:#16a34a}
+.resultado{margin-top:30px;font-size:22px;font-weight:600;min-height:40px}
+footer{text-align:center;padding:20px;background:rgba(0,0,0,.2)}
+@media(max-width:768px){
+header{padding:20px}.hero{padding:25px}.hero h1{font-size:30px}
+.busqueda{flex-direction:column}.busqueda input,.busqueda button{width:100%}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Mi Paquetería</div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Rastrea tu envío</h1>
+    <p>Ingresa el número de guía para consultar el estado.</p>
+
+    <div class="busqueda">
+      <input id="guia" type="text" placeholder="Ej. ABC123456">
+      <button id="buscarBtn">Buscar</button>
+    </div>
+
+    <div id="resultado" class="resultado"></div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Mi Paquetería</p>
+</footer>
+
+<script>
+const guias={
+"ABC123456":"Enviado",
+"ABC987654":"En tránsito",
+"PKG100001":"En centro de distribución",
+"PKG100002":"En ruta de entrega",
+"PKG100003":"Entregado"
+};
+
+const boton=document.getElementById("buscarBtn");
+const caja=document.getElementById("guia");
+const resultado=document.getElementById("resultado");
+
+function buscarGuia(){
+ const numero=caja.value.trim().toUpperCase();
+ if(numero===""){
+   resultado.innerHTML="Ingresa un número de guía.";
+   return;
+ }
+ if(guias[numero]){
+   resultado.innerHTML="<strong>Estado:</strong> "+guias[numero];
+ }else{
+   resultado.innerHTML="La guía no existe.";
+ }
+}
+
+boton.addEventListener("click",buscarGuia);
+caja.addEventListener("keypress",function(e){
+ if(e.key==="Enter") buscarGuia();
+});
+const PASSWORD="admin123";
+const almacenadas=localStorage.getItem("guias");
+if(almacenadas){Object.assign(guias,JSON.parse(almacenadas));}
+function guardarGuias(){localStorage.setItem("guias",JSON.stringify(guias));}
+function abrirPanel(){
+const pass=prompt("Contraseña:");
+if(pass!==PASSWORD){alert("Incorrecta");return;}
+const op=prompt("1 Agregar\n2 Actualizar\n3 Eliminar");
+if(op==="1"){const g=prompt("Guía");const e=prompt("Estado");guias[g.toUpperCase()]=e;guardarGuias();}
+if(op==="2"){const g=prompt("Guía");const e=prompt("Estado");guias[g.toUpperCase()]=e;guardarGuias();}
+if(op==="3"){const g=prompt("Guía");delete guias[g.toUpperCase()];guardarGuias();}
+}
+
+</script>
+</body>
+</html>
